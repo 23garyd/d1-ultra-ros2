@@ -114,7 +114,7 @@ def generate_launch_description():
         arguments=[
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',#速度 ROS->GZ（如 Gazebo 侧有订阅）
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock', #时钟 GZ->ROS
-            # '/model/go2_dog/odometry_with_covariance@nav_msgs/msg/Odometry[gz.msgs.Odometry', #里程计 GZ->ROS
+            '/model/go2_dog/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry', #里程计 GZ->ROS
             # '/model/go2_dog/pose@geometry_msgs/msg/TFMessage[gz.msgs.Pose_V', #位姿 GZ->ROS
 
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan', #单线激光雷达 
@@ -126,7 +126,7 @@ def generate_launch_description():
         ],
         parameters=[{"qos_overrides./model/go2_dog.subscriber.reliability": "reliable"}],
         remappings=[
-            # ('/model/go2_dog/odometry_with_covariance', '/odom/ign'),
+            ('/model/go2_dog/odometry', '/odom/ign'),
             # ('/model/go2_dog/pose', '/tf'),
         ]
     )
@@ -239,6 +239,10 @@ def generate_launch_description():
             'gait_config_path': os.path.join(config_pkg_share,'config','gait','gait.yaml'),
             'joints_map_path': os.path.join(config_pkg_share,'config','joints','joints.yaml'),
             'links_map_path': os.path.join(config_pkg_share,'config','links','links.yaml'),
+
+            "lite": 'true', #使用精简模式
+            "hardware_connected": 'false', #不连接真实硬件
+            "close_loop_odom": 'true', #使用闭环里程计
         }.items()
     )
     # CHAMP 依赖 /joint_states、/tf、以及控制器 action 接口等；提前启动可能触发偶发 exit code -11。
@@ -270,7 +274,42 @@ def generate_launch_description():
     )
     ld.add_action(static_base_footprint_tf)
 
-    
+    #go2_dog/odom odom    go2_dog/base_footprint base_footprint
+
+    go2_odom_to_odom_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='go2_odom_to_odom_tf',
+        arguments=[
+            '--frame-id', 'odom',
+            '--child-frame-id', 'go2_dog/odom',
+            '--x', '0.0',
+            '--y', '0.0',
+            '--z', '0.0',
+            '--roll', '0.0',
+            '--pitch', '0.0',
+            '--yaw', '0.0'
+        ]
+    )
+    ld.add_action(go2_odom_to_odom_tf)
+
+    go2_base_footprint_to_base_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='go2_base_footprint_to_base_tf',
+        arguments=[
+            '--frame-id', 'go2_dog/base_footprint',
+            '--child-frame-id', 'base_footprint',
+            '--x', '0.0',
+            '--y', '0.0',
+            '--z', '0.0',
+            '--roll', '0.0',
+            '--pitch', '0.0',
+            '--yaw', '0.0'
+        ]
+    )
+    ld.add_action(go2_base_footprint_to_base_tf)
+
     return ld
 
 

@@ -767,7 +767,12 @@
     </plugin>
   </gazebo>
   <!-- 真实里程计发布（Ignition）已禁用，使用 EKF 输出 /odom -->
-
+  <gazebo>
+    <plugin filename="ignition-gazebo-odometry-publisher-system"
+            name="ignition::gazebo::systems::OdometryPublisher">
+      <dimensions>3</dimensions> <!-- 四足有起伏，用 3D -->
+    </plugin>
+  </gazebo>
   <!-- 运动插件2 生成运动控制器的插件 -->
   
   <!-- 添加传感器插件 -->
