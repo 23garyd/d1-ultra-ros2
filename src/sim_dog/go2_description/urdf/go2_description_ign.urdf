@@ -766,6 +766,8 @@
       name="ignition::gazebo::systems::JointStatePublisher">
     </plugin>
   </gazebo>
+  <!-- 真实里程计发布（Ignition）已禁用，使用 EKF 输出 /odom -->
+
   <!-- 运动插件2 生成运动控制器的插件 -->
   
   <!-- 添加传感器插件 -->
@@ -781,7 +783,8 @@
     <sensor name='scan' type='gpu_lidar'>
       <topic>scan</topic> <!-- 单线 /scan 多线 /scan/points -->
       <update_rate>20</update_rate>
-      <pose>0 0 0 0 2.8782 0</pose> <!-- 位置姿态 -->
+      <pose>0 0 0 0 0.2633926 0</pose> <!-- 位置姿态 -->
+      
       <lidar>
         <scan>
           <!-- 水平采样参数 -->
@@ -855,20 +858,96 @@
         </sensor>
   </gazebo>
 
+  <gazebo>
+  <!-- ROS2 Control bridge for Gazebo Sim (gz) -->
+  <plugin filename="gz_ros2_control-system"
+          name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+    <!-- The plugin will read controller params from this YAML file -->
+    <parameters>/home/chiway/ign_robot_dog/src/sim_dog/sim_ign_dog/config/go2_controllers.yaml</parameters>
+    <!-- Where to find the robot_description parameter -->
+    <robot_param>robot_description</robot_param>
+    <robot_param_node>robot_state_publisher</robot_param_node>
+  </plugin>
+</gazebo>
 
   <ros2_control name="GazeboSimSystem" type="system">
   <hardware>
     <plugin>gz_ros2_control/GazeboSimSystem</plugin>
   </hardware>
 
-  <!-- 下面对你的 12 个关节逐个写： -->
-  <joint name="fl_hip_joint">
+  <joint name="FL_hip_joint">
     <command_interface name="position"/>
     <state_interface name="position"/>
     <state_interface name="velocity"/>
   </joint>
-  <!-- ...其余关节... -->
-  </ros2_control>
+
+  <joint name="FL_thigh_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FL_calf_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_hip_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_thigh_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_calf_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_hip_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_thigh_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_calf_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_hip_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_thigh_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_calf_joint">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+</ros2_control>
 
 
 </robot>
