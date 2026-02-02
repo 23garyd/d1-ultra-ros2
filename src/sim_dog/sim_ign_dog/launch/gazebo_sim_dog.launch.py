@@ -118,7 +118,7 @@ def generate_launch_description():
             # '/model/go2_dog/pose@geometry_msgs/msg/TFMessage[gz.msgs.Pose_V', #位姿 GZ->ROS
 
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan', #单线激光雷达 
-            # '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #多线激光雷达 
+            '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #多线激光雷达 
             # '/depth_camera@sensor_msgs/msg/Image[gz.msgs.Image', #深度相机图像
             # '/depth_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #深度相机点云数据
             # '/image_raw@sensor_msgs/msg/Image[gz.msgs.Image', #图像参数
@@ -266,7 +266,7 @@ def generate_launch_description():
             '--child-frame-id', 'base',
             '--x', '0.0',
             '--y', '0.0',
-            '--z', '0.0',
+            '--z', '0.25',
             '--roll', '0.0',
             '--pitch', '0.0',
             '--yaw', '0.0'

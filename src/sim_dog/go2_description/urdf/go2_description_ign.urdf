@@ -788,7 +788,7 @@
     <sensor name='scan' type='gpu_lidar'>
       <topic>scan</topic> <!-- 单线 /scan 多线 /scan/points -->
       <update_rate>20</update_rate>
-      <pose>0 0 0 0 0.2633926 0</pose> <!-- 位置姿态 -->
+      <pose>0 0 0 0 0 0</pose> <!-- 位置姿态 -->
       
       <lidar>
         <scan>
