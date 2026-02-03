@@ -1,6 +1,16 @@
 使用champ开源算法,实现智元机器狗d1的ign-gazebo仿真
 ===
 ## 使用方式
+- 配置环境变量
+```
+sudo nano ~/.bashrc
+```
+粘贴下列内容到文件末尾，保存并退出，然后执行`source ~/.bashrc`使配置生效
+```
+#ign模型路径
+export IGN_GAZEBO_RESOURCE_PATH=ign_models  #相对路径
+#export IGN_GAZEBO_RESOURCE_PATH=~/ign_models #绝对路径
+```
 - ign_gazebo节点
 ```
 ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py 

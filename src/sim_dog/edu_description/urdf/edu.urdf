@@ -1089,10 +1089,8 @@
   <plugin filename="gz_ros2_control-system"
           name="gz_ros2_control::GazeboSimROS2ControlPlugin">
     <!-- The plugin will read controller params from this YAML file -->
-    <parameters>/home/chiway/work_temp/ign_robot_d1_dog/src/sim_dog/sim_ign_dog/config/d1_controllers.yaml</parameters>
-    <!-- <parameters>/home/chiway/ign_robot_dog/src/sim_dog/go2_description/config/robot_control.yaml</parameters> -->
-    <!-- <parameters>/home/chiway/ign_robot_dog/src/go2_config/config/ros_control/ros_control.yaml</parameters> -->
     <!-- Where to find the robot_description parameter -->
+    <parameters>$(find sim_ign_dog)/config/d1_controllers.yaml</parameters>
     <robot_param>robot_description</robot_param>
     <robot_param_node>robot_state_publisher</robot_param_node>
   </plugin>
