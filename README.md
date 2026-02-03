@@ -11,6 +11,17 @@ sudo nano ~/.bashrc
 export IGN_GAZEBO_RESOURCE_PATH=ign_models  #相对路径
 #export IGN_GAZEBO_RESOURCE_PATH=~/ign_models #绝对路径
 ```
+- 安装依赖
+```
+sudo apt install ros-humble-gazebo-ros2-control
+sudo apt install ros-humble-xacro
+sudo apt install ros-humble-robot-localization
+sudo apt install ros-humble-ros2-controllers
+sudo apt install ros-humble-ros2-control
+sudo apt install ros-humble-velodyne
+sudo apt install ros-humble-velodyne-gazebo-plugins
+sudo apt-get install ros-humble-velodyne-description
+```
 - ign_gazebo节点
 ```
 ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py 
