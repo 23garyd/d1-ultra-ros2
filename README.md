@@ -9,7 +9,7 @@ ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
-
+![](.docs/example.png)
 ## 参考仓库
 - [anujjain-dev/unitree-go2-ros2](https://github.com/anujjain-dev/unitree-go2-ros2.git)
 
