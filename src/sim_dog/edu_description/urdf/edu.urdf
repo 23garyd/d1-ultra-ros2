@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
-     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
-     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
+<robot 
   name="edu_urdf">
-  <link
-    name="base_link">
+  <link name="base_link">
     <inertial>
       <origin
         xyz="0.0054244583 -0.00036330247 0.0060908623"
@@ -35,17 +31,13 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://edu_description/meshes/BASE_LINK.STL" />
-      </geometry>
+      <origin xyz="0.01424 0 0.04" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.4 0.1 0.05"/>
+        </geometry>
     </collision>
   </link>
-  <link
-    name="FL_ABAD_LINK">
+  <link name="FL_ABAD_LINK">
     <inertial>
       <origin
         xyz="-0.027074453 -0.015458828 0.0000094167931"
@@ -75,17 +67,13 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="-0.04 -0.017 0.04" rpy="0 0 0"/>
       <geometry>
-        <mesh
-          filename="package://edu_description/meshes/FL_ABAD_LINK.STL" />
+        <box size="0.1 0.07 0.07"/>
       </geometry>
     </collision>
   </link>
-  <joint
-    name="FL_ABAD_JOINT"
+  <joint name="FL_ABAD_JOINT"
     type="revolute">
     <origin
       xyz="0.17449 0.062 0"
@@ -99,11 +87,10 @@
     <limit
       lower="-0.4887"
       upper="0.4887"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
-  <link
-    name="FL_HIP_LINK">
+  <link name="FL_HIP_LINK">
     <inertial>
       <origin
         xyz="-0.00334388 -0.042909 -0.0216077"
@@ -133,12 +120,9 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="-0.003 -0.06 -0.08" rpy="0 0 0"/>
       <geometry>
-        <mesh
-          filename="package://edu_description/meshes/FL_HIP_LINK.STL" />
+        <box size="0.08392 0.17199 0.25400"/>
       </geometry>
     </collision>
   </link>
@@ -157,8 +141,8 @@
     <limit
       lower="-1.1519"
       upper="2.967"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="FL_KNEE_LINK">
@@ -191,12 +175,9 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0.02160 0 -0.08839" rpy="0 0 0"/>
       <geometry>
-        <mesh
-          filename="package://edu_description/meshes/FL_KNEE_LINK.STL" />
+        <box size="0.03481 0.02000 0.11477"/>
       </geometry>
     </collision>
   </link>
@@ -215,8 +196,8 @@
     <limit
       lower="-2.723"
       upper="-0.602"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="FL_FOOT_LINK">
@@ -248,15 +229,13 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
+    <!-- 半径按你的脚实际大小微调 -->
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://edu_description/meshes/FL_FOOT_LINK.STL" />
-      </geometry>
-    </collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <sphere radius="0.02"/> 
+    </geometry>
+  </collision>
   </link>
   <joint
     name="FL_FOOT_JOINT"
@@ -271,6 +250,7 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
   <link
     name="FR_ABAD_LINK">
     <inertial>
@@ -301,7 +281,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -309,7 +289,7 @@
         <mesh
           filename="package://edu_description/meshes/FR_ABAD_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="FR_ABAD_JOINT"
@@ -326,8 +306,8 @@
     <limit
       lower="-0.4887"
       upper="0.4887"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="FR_HIP_LINK">
@@ -359,7 +339,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -367,7 +347,7 @@
         <mesh
           filename="package://edu_description/meshes/FR_HIP_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="FR_HIP_JOINT"
@@ -384,8 +364,8 @@
     <limit
        lower="-1.1519"
       upper="2.967"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="FR_KNEE_LINK">
@@ -417,7 +397,7 @@
           rgba="0.49804 0.49804 0.49804 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -425,7 +405,7 @@
         <mesh
           filename="package://edu_description/meshes/FR_KNEE_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="FR_KNEE_JOINT"
@@ -442,8 +422,8 @@
     <limit
       lower="-2.723"
       upper="-0.602"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="FR_FOOT_LINK">
@@ -476,14 +456,11 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://edu_description/meshes/FR_FOOT_LINK.STL" />
-      </geometry>
-    </collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <sphere radius="0.02"/> <!-- 半径按你的脚实际大小微调 -->
+    </geometry>
+  </collision>
   </link>
   <joint
     name="FR_FOOT_JOINT"
@@ -528,7 +505,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -536,7 +513,7 @@
         <mesh
           filename="package://edu_description/meshes/RR_ABAD_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RR_ABAD_JOINT"
@@ -553,8 +530,8 @@
     <limit
       lower="-0.4887"
       upper="0.4887"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RR_HIP_LINK">
@@ -586,7 +563,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -594,7 +571,7 @@
         <mesh
           filename="package://edu_description/meshes/RR_HIP_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RR_HIP_JOINT"
@@ -611,8 +588,8 @@
     <limit
      lower="-1.1519"
       upper="2.967"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RR_KNEE_LINK">
@@ -644,7 +621,7 @@
           rgba="0.49804 0.49804 0.49804 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -652,7 +629,7 @@
         <mesh
           filename="package://edu_description/meshes/RR_KNEE_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RR_KNEE_JOINT"
@@ -669,8 +646,8 @@
     <limit
       lower="-2.723"
       upper="-0.602"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RR_FOOT_LINK">
@@ -703,14 +680,11 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://edu_description/meshes/RR_FOOT_LINK.STL" />
-      </geometry>
-    </collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <sphere radius="0.02"/> <!-- 半径按你的脚实际大小微调 -->
+    </geometry>
+  </collision>
   </link>
   <joint
     name="RR_FOOT_JOINT"
@@ -755,7 +729,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -763,7 +737,7 @@
         <mesh
           filename="package://edu_description/meshes/RL_ABAD_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RL_ABAD_JOINT"
@@ -780,8 +754,8 @@
     <limit
       lower="-0.4887"
       upper="0.4887"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RL_HIP_LINK">
@@ -813,7 +787,7 @@
           rgba="0.75294 0.75294 0.75294 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -821,7 +795,7 @@
         <mesh
           filename="package://edu_description/meshes/RL_HIP_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RL_HIP_JOINT"
@@ -838,8 +812,8 @@
     <limit
       lower="-1.1519"
       upper="2.967"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RL_KNEE_LINK">
@@ -871,7 +845,7 @@
           rgba="0.49804 0.49804 0.49804 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -879,7 +853,7 @@
         <mesh
           filename="package://edu_description/meshes/RL_KNEE_LINK.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="RL_KNEE_JOINT"
@@ -896,8 +870,8 @@
     <limit
       lower="-2.723"
       upper="-0.602"
-      effort="0"
-      velocity="0" />
+      effort="48.0"
+      velocity="28.0" />
   </joint>
   <link
     name="RL_FOOT_LINK">
@@ -930,13 +904,10 @@
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://edu_description/meshes/RL_FOOT_LINK.STL" />
-      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="0.02"/> <!-- 半径按你的脚实际大小微调 -->
+        </geometry>
     </collision>
   </link>
   <joint
@@ -952,4 +923,257 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+
+  <!-- 雷达link -->
+  <link
+    name="laser">
+    <inertial>
+      <origin
+        xyz="-2.91351228429805E-07 0.00125563302353481 1.079127794333E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.125547937345628" />
+      <inertia
+        ixx="4.95998226775308E-05"
+        ixy="-4.86258968552596E-10"
+        ixz="-8.31050558306801E-10"
+        iyy="5.59915543947166E-05"
+        iyz="1.40519678816194E-09"
+        izz="4.97425731410219E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://edu_description/meshes/laser.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <!-- <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://edu_description/meshes/laser.STL" />
+      </geometry>
+    </collision> -->
+  </link>
+  <joint
+    name="laser_joint"
+    type="fixed">
+    <origin
+      xyz="0.21 0 0.1"
+      rpy="0 0.2618 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="laser" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <!-- 控制机器人运动 -->
+  <!-- 运动插件1 生成joint_state_publisher 的插件 关节状态发布节点 -->
+   <gazebo>
+    <plugin filename="ignition-gazebo-joint-state-publisher-system"
+      name="ignition::gazebo::systems::JointStatePublisher">
+    </plugin>
+  </gazebo>
+  <!-- 真实里程计发布（Ignition -->
+  <gazebo>
+    <plugin filename="ignition-gazebo-odometry-publisher-system"
+            name="ignition::gazebo::systems::OdometryPublisher">
+      <dimensions>3</dimensions> <!-- 四足有起伏，用 3D -->
+    </plugin>
+  </gazebo>
+  <!-- 运动插件2 生成运动控制器的插件 -->
+  
+  <!-- 添加传感器插件 -->
+  <gazebo>
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine> <!-- 渲染方式 -->
+    </plugin>
+  </gazebo>
+  <!-- 雷达传感器 -->
+  <gazebo reference="laser"> <!-- 针对生效的link -->
+    <sensor name='scan' type='gpu_lidar'>
+      <topic>scan</topic> <!-- 单线 /scan 多线 /scan/points -->
+      <update_rate>20</update_rate>
+      <pose>0 0 0 0 0 0</pose> <!-- 位置姿态 -->
+      
+      <lidar>
+        <scan>
+          <!-- 水平采样参数 -->
+          <horizontal>
+            <samples>640</samples> <!-- 水平旋转一个周期采样点 -->
+            <resolution>1</resolution> <!-- 雷达分辨率,前后扫描的间隔  单位 度-->
+            <!-- 扫描角度 单位 弧度 -->
+            <min_angle>-3.1415926</min_angle> <!-- 最小角度 -->
+            <max_angle>3.1415926</max_angle> <!-- 最大角度 -->
+          </horizontal>
+          <!-- 垂直采样参数 -->
+          <vertical>
+            <samples>16</samples> <!-- 16 线 激光雷达 -->
+            <resolution>1</resolution> 
+            <min_angle>-0.261799</min_angle>
+            <max_angle>0.261799</max_angle>
+          </vertical>
+        </scan>
+        <range> <!-- 有效距离 -->
+          <min>0.08</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution> <!-- 扫描精度 米 -->
+        </range>
+      </lidar>
+      <alwaysOn>1</alwaysOn> <!-- 是否一直打开 -->
+      <visualize>true</visualize> <!-- 是否可见 -->
+      <ignition_frame_id>laser</ignition_frame_id> <!-- 指定雷达消息使用的frame-id -->
+    </sensor>
+  </gazebo>
+
+  <!-- <gazebo reference="front_camera">
+    <sensor name="depth_camera" type="depth_camera">
+          <ignition_frame_id>front_camera</ignition_frame_id>
+          <update_rate>10</update_rate>
+          <topic>/depth_camera</topic>
+          <camera>
+            <horizontal_fov>1.05</horizontal_fov>
+            <image>
+              <width>256</width>
+              <height>256</height>
+              <format>R_FLOAT32</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>10.0</far>
+            </clip>
+          </camera>
+          <alwaysOn>1</alwaysOn>
+      </sensor>
+  </gazebo>
+
+  <gazebo reference="front_camera"> 
+    <sensor name="camera_link" type="camera">
+          <camera>
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <always_on>true</always_on>
+          <update_rate>20</update_rate>
+          <visualize>true</visualize>
+          <topic>/image_raw</topic>
+          <ignition_frame_id>front_camera</ignition_frame_id>
+        </sensor>
+  </gazebo> -->
+
+  <gazebo>
+  <!-- ROS2 Control bridge for Gazebo Sim (gz) -->
+  <plugin filename="gz_ros2_control-system"
+          name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+    <!-- The plugin will read controller params from this YAML file -->
+    <parameters>/home/chiway/work_temp/ign_robot_d1_dog/src/sim_dog/sim_ign_dog/config/d1_controllers.yaml</parameters>
+    <!-- <parameters>/home/chiway/ign_robot_dog/src/sim_dog/go2_description/config/robot_control.yaml</parameters> -->
+    <!-- <parameters>/home/chiway/ign_robot_dog/src/go2_config/config/ros_control/ros_control.yaml</parameters> -->
+    <!-- Where to find the robot_description parameter -->
+    <robot_param>robot_description</robot_param>
+    <robot_param_node>robot_state_publisher</robot_param_node>
+  </plugin>
+</gazebo>
+
+  <ros2_control name="GazeboSimSystem" type="system">
+  <hardware>
+    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+  </hardware>
+
+  <joint name="FL_ABAD_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FL_HIP_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FL_KNEE_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_ABAD_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_HIP_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="FR_KNEE_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_ABAD_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_HIP_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RL_KNEE_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_ABAD_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_HIP_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="RR_KNEE_JOINT">
+    <command_interface name="position"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+</ros2_control>
+
 </robot>

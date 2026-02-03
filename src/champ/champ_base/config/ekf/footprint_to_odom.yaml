@@ -27,8 +27,9 @@ footprint_to_odom_ekf:
                   false, false, false,
                   true, true, false]
 
+    odom_frame: d1_dog/odom
+    base_link_frame: d1_dog/base_footprint
+    world_frame: d1_dog/odom
 
-    odom_frame: go2_dog/odom
-    base_link_frame: go2_dog/base_footprint
-    world_frame: go2_dog/odom
+
     

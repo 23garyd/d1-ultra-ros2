@@ -33,6 +33,7 @@ from ament_index_python.packages import get_package_share_directory
 # from launch_ros.parameter_descriptions import ParameterValue
 # from launch.substitutions import Command
 from launch.actions import TimerAction
+from launch.actions import ExecuteProcess
 """
     在gazebo中加载自定义的仿真环境
     并生成小车模型
@@ -55,7 +56,6 @@ def generate_launch_description():
     #获取当前功能包路径 
     this_package_path = get_package_share_directory('sim_ign_dog')
 
-    # 启动仿真环境   ros2 launch ros_gz_sim gz_sim.launch.py gz_args:="-v 4 -r visualize_lidar.sdf"
     """
     编辑.bashrc文件,添加环境变量
         #ign模型路径
@@ -70,21 +70,21 @@ def generate_launch_description():
                 'gz_sim.launch.py'
             )
         ),
-        launch_arguments={# -v 是指日志等级 4 是最高等级的日志 -r 是指加载的sdf模型文件路径 
+        launch_arguments={# -v 是指日志等级 4 是最高等级的日志 -r 是指自动运行仿真
             # 'gz_args': f"-v 4 -r {os.path.join(demo_gazebo_sim_path,'world','house.sdf')}" #原始墙壁模型
-            'gz_args': f"-r {os.path.join(this_package_path,'world','house_add.sdf')}" #添加家具的房子模型
+            'gz_args': f"-r {os.path.join(this_package_path,'world','house_add.sdf')}" #添加家具的房子模型, -r 表示自动运行
             # 'gz_args': f"-v 4 -r {os.path.join(get_package_share_directory('demo_gazebo_sim'),'world','visualize_lidar.sdf')}"
         }.items()
     )
     ld.add_action(gazebo_visualize_node)
 
-    #加载小车模型的launch文件
+    #加载模型的launch文件
     dog_description_node = IncludeLaunchDescription(
         launch_description_source=PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('go2_description'),
+                get_package_share_directory('edu_description'),
                 'launch',
-                'dog_description_ign.launch.py'
+                'sim_display_launch.py'
             )
         )
     )
@@ -95,11 +95,11 @@ def generate_launch_description():
         package='ros_gz_sim',
         executable='create',
         arguments=[
-            '-name', 'go2_dog',
+            '-name', 'd1_dog',
             '-topic', '/robot_description',
             '-x', '-4',
             # '-y', '0.0',
-            '-z', '0.8', #防止生成模型时与地面嵌合
+            '-z', '0.4', #防止生成模型时与地面嵌合
         ],
         output='screen'
     )
@@ -113,9 +113,9 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=[
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',#速度 ROS->GZ（如 Gazebo 侧有订阅）
-            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock', #时钟 GZ->ROS
-            '/model/go2_dog/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry', #里程计 GZ->ROS
-            # '/model/go2_dog/pose@geometry_msgs/msg/TFMessage[gz.msgs.Pose_V', #位姿 GZ->ROS
+            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock', #时钟 GZ->ROS (Gazebo世界时钟)
+            '/model/d1_dog/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry', #里程计 GZ->ROS
+            # '/model/d1_dog/pose@geometry_msgs/msg/TFMessage[gz.msgs.Pose_V', #位姿 GZ->ROS
 
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan', #单线激光雷达 
             '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #多线激光雷达 
@@ -124,10 +124,11 @@ def generate_launch_description():
             # '/image_raw@sensor_msgs/msg/Image[gz.msgs.Image', #图像参数
             # '/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',#相机参数
         ],
-        # parameters=[{"qos_overrides./model/go2_dog.subscriber.reliability": "reliable"}],
+        # parameters=[{"qos_overrides./model/d1_dog.subscriber.reliability": "reliable"}],
         remappings=[
-            ('/model/go2_dog/odometry', '/odom/ign'),
-            # ('/model/go2_dog/pose', '/tf'),
+            ('/model/d1_dog/odometry', '/odom/ign'),
+            # ('/world/empty/clock', '/clock'),  # 重映射Gazebo时钟到ROS标准时钟话题
+            # ('/model/d1_dog/pose', '/tf'),
         ]
     )
     ld.add_action(ros_bridge_node)
@@ -136,19 +137,19 @@ def generate_launch_description():
     rviz2_node = Node(
         package='rviz2',
         executable='rviz2',
-        arguments=['-d', os.path.join(this_package_path,'rviz','ign_dog.rviz')],
+        arguments=['-d', os.path.join(this_package_path,'rviz','d1_ign_dog.rviz')],
         output='screen'
     )
     ld.add_action(rviz2_node)
 
-    #因为 depth_camera/points 坐标系没发生改变 mycar_4w/base_footprint/depth_camera 发布static 坐标系变换与 camera
+    #因为 depth_camera/points 坐标系没发生改变 d1_dog/base_footprint/depth_camera 发布static 坐标系变换与 camera
     static_laser_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_laser_tf',
         arguments=[
             '--frame-id', 'front_camera',
-            '--child-frame-id', 'go2_dog/base_footprint/depth_camera',
+            '--child-frame-id', 'd1_dog/base_footprint/depth_camera',
             '--x', '0.0',
             '--y', '0.0',
             '--z', '0.0',
@@ -157,7 +158,7 @@ def generate_launch_description():
             '--yaw', '0.0'
         ]
     )
-    ld.add_action(static_laser_tf)
+    # ld.add_action(static_laser_tf)
 
     #附加内容
     # If你的 controller_manager 实际在模型命名空间下（例如 /model/go2/controller_manager），启动时把这个参数改掉
@@ -188,7 +189,7 @@ def generate_launch_description():
         ],
         output='screen',
     )
-
+    
     ld.add_action(
         RegisterEventHandler(
             OnProcessExit(
@@ -197,11 +198,12 @@ def generate_launch_description():
             )
         )
     )
+    
     ld.add_action(TimerAction(period=controllers_delay, actions=[jsb_spawner]))
 
     #启动cham
-    config_pkg_share = os.path.join(get_package_share_directory('go2_config'))
-    descr_pkg_share = os.path.join(get_package_share_directory('go2_description'))
+    config_pkg_share = os.path.join(get_package_share_directory('edu_config'))
+    descr_pkg_share = os.path.join(get_package_share_directory('edu_description'))
     
     cham_bringup_launch = IncludeLaunchDescription(
         launch_description_source=PythonLaunchDescriptionSource(
@@ -226,10 +228,10 @@ def generate_launch_description():
             # "publish_foot_contacts": "false",
             # "close_loop_odom": "true",
             'use_sim_time': 'true',
-            'description_path': os.path.join(descr_pkg_share,'urdf','go2_description.urdf'),
+            'description_path': os.path.join(descr_pkg_share,'urdf','edu.urdf'),
             'rviz': 'false',#仿真环境已经启动rviz了
             'gazebo': 'true',#在gazebo中运行
-            'base_link_frame': 'base',#go2_dog模型为base
+            'base_link_frame': 'base_link',#d1_dog模型为base_link
             'publish_odom_tf': 'false',#不发布odom到base的tf,由ekf负责
             'publish_foot_contacts': 'false',#仿真未提供 foot_contacts
             'use_foot_contacts': 'false',#仿真未提供 foot_contacts 时禁用
@@ -263,7 +265,7 @@ def generate_launch_description():
         name='static_base_footprint_tf',
         arguments=[
             '--frame-id', 'base_footprint',
-            '--child-frame-id', 'base',
+            '--child-frame-id', 'base_link',
             '--x', '0.0',
             '--y', '0.0',
             '--z', '0.25',
@@ -274,15 +276,15 @@ def generate_launch_description():
     )
     ld.add_action(static_base_footprint_tf)
 
-    #go2_dog/odom odom    go2_dog/base_footprint base_footprint
+    #d1_dog/odom odom    d1_dog/base_footprint base_footprint
 
-    go2_odom_to_odom_tf = Node(
+    d1_odom_to_odom_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
-        name='go2_odom_to_odom_tf',
+        name='d1_odom_to_odom_tf',
         arguments=[
             '--frame-id', 'odom',
-            '--child-frame-id', 'go2_dog/odom',
+            '--child-frame-id', 'd1_dog/odom',
             '--x', '0.0',
             '--y', '0.0',
             '--z', '0.0',
@@ -291,14 +293,14 @@ def generate_launch_description():
             '--yaw', '0.0'
         ]
     )
-    ld.add_action(go2_odom_to_odom_tf)
+    ld.add_action(d1_odom_to_odom_tf)
 
-    go2_base_footprint_to_base_tf = Node(
+    d1_base_footprint_to_base_link_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
-        name='go2_base_footprint_to_base_tf',
+        name='d1_base_footprint_to_base_link_tf',
         arguments=[
-            '--frame-id', 'go2_dog/base_footprint',
+            '--frame-id', 'd1_dog/base_footprint',
             '--child-frame-id', 'base_footprint',
             '--x', '0.0',
             '--y', '0.0',
@@ -308,36 +310,7 @@ def generate_launch_description():
             '--yaw', '0.0'
         ]
     )
-    ld.add_action(go2_base_footprint_to_base_tf)
+    ld.add_action(d1_base_footprint_to_base_link_tf)
 
     return ld
 
-
-
-
-
-
-
-
-
-
-
-
-""" 
-
-    ros2 topic pub --once /legs_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "{
-        joint_names: [
-            'FL_hip_joint','FL_thigh_joint','FL_calf_joint',
-            'FR_hip_joint','FR_thigh_joint','FR_calf_joint',
-            'RL_hip_joint','RL_thigh_joint','RL_calf_joint',
-            'RR_hip_joint','RR_thigh_joint','RR_calf_joint'
-        ],
-        points: [
-            {
-            positions: [0.2, 0.9, -1.6,  -0.2, 0.9, -1.6,   0.2, 0.9, -1.6,  -0.2, 0.9, -1.6],
-            time_from_start: {sec: 1, nanosec: 0}
-            }
-        ]
-        }"
-
- """
