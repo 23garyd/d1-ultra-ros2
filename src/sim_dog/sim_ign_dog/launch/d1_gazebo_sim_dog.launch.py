@@ -35,8 +35,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch.actions import TimerAction
 from launch.actions import ExecuteProcess
 """
-    在gazebo中加载自定义的仿真环境
-    并生成小车模型
+    在gazebo中加载自定义的仿真环境和d1_dog模型，并启动ros2与gazebo的桥接，
+    同时启动rviz2进行可视化，以及启动champ控制器进行机器狗的运动控制。
 """
 def generate_launch_description():
     ld = LaunchDescription()
@@ -119,10 +119,10 @@ def generate_launch_description():
 
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan', #单线激光雷达 
             '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #多线激光雷达 
-            # '/depth_camera@sensor_msgs/msg/Image[gz.msgs.Image', #深度相机图像
-            # '/depth_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #深度相机点云数据
-            # '/image_raw@sensor_msgs/msg/Image[gz.msgs.Image', #图像参数
-            # '/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',#相机参数
+            '/depth_camera@sensor_msgs/msg/Image[gz.msgs.Image', #深度相机图像
+            '/depth_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked', #深度相机点云数据
+            '/image_raw@sensor_msgs/msg/Image[gz.msgs.Image', #图像参数
+            '/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',#相机参数
         ],
         # parameters=[{"qos_overrides./model/d1_dog.subscriber.reliability": "reliable"}],
         remappings=[
@@ -149,7 +149,7 @@ def generate_launch_description():
         name='static_laser_tf',
         arguments=[
             '--frame-id', 'front_camera',
-            '--child-frame-id', 'd1_dog/base_footprint/depth_camera',
+            '--child-frame-id', 'd1_dog/base_link/depth_camera',
             '--x', '0.0',
             '--y', '0.0',
             '--z', '0.0',
@@ -158,7 +158,7 @@ def generate_launch_description():
             '--yaw', '0.0'
         ]
     )
-    # ld.add_action(static_laser_tf)
+    ld.add_action(static_laser_tf)
 
     #附加内容
     # If你的 controller_manager 实际在模型命名空间下（例如 /model/go2/controller_manager），启动时把这个参数改掉

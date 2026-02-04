@@ -924,6 +924,23 @@
       xyz="0 0 0" />
   </joint>
 
+  <!-- front_camera -->
+  <link
+    name="front_camera">
+  </link>
+
+  <joint
+    name="front_camera_joint"
+    type="fixed">
+    <origin
+      xyz="0.26470 0 0.02038"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_camera" />
+  </joint>
+
 
   <!-- 雷达link -->
   <link
@@ -1008,14 +1025,14 @@
   <gazebo reference="laser"> <!-- 针对生效的link -->
     <sensor name='scan' type='gpu_lidar'>
       <topic>scan</topic> <!-- 单线 /scan 多线 /scan/points -->
-      <update_rate>20</update_rate>
+      <update_rate>10</update_rate>
       <pose>0 0 0 0 0 0</pose> <!-- 位置姿态 -->
       
       <lidar>
         <scan>
           <!-- 水平采样参数 -->
           <horizontal>
-            <samples>640</samples> <!-- 水平旋转一个周期采样点 -->
+            <samples>2048</samples> <!-- 水平旋转一个周期采样点 -->
             <resolution>1</resolution> <!-- 雷达分辨率,前后扫描的间隔  单位 度-->
             <!-- 扫描角度 单位 弧度 -->
             <min_angle>-3.1415926</min_angle> <!-- 最小角度 -->
@@ -1023,10 +1040,11 @@
           </horizontal>
           <!-- 垂直采样参数 -->
           <vertical>
-            <samples>16</samples> <!-- 16 线 激光雷达 -->
+            <samples>64</samples> <!-- 16 线 激光雷达 -->
             <resolution>1</resolution> 
             <min_angle>-0.261799</min_angle>
-            <max_angle>0.261799</max_angle>
+            <max_angle>0.4</max_angle>
+            <!-- <max_angle>0.261799</max_angle> -->
           </vertical>
         </scan>
         <range> <!-- 有效距离 -->
@@ -1041,7 +1059,7 @@
     </sensor>
   </gazebo>
 
-  <!-- <gazebo reference="front_camera">
+  <gazebo reference="front_camera">
     <sensor name="depth_camera" type="depth_camera">
           <ignition_frame_id>front_camera</ignition_frame_id>
           <update_rate>10</update_rate>
@@ -1082,7 +1100,7 @@
           <topic>/image_raw</topic>
           <ignition_frame_id>front_camera</ignition_frame_id>
         </sensor>
-  </gazebo> -->
+  </gazebo>
 
   <gazebo>
   <!-- ROS2 Control bridge for Gazebo Sim (gz) -->
