@@ -312,5 +312,19 @@ def generate_launch_description():
     )
     ld.add_action(d1_base_footprint_to_base_link_tf)
 
+    #################
+
+    # 导航实现
+    nav2_launch = IncludeLaunchDescription(
+        launch_description_source=PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory('sim_navigation2'),
+                'launch',
+                'nav2_bringup.launch.py'
+            )
+        )
+    )
+    ld.add_action(nav2_launch)
+
     return ld
 

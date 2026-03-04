@@ -1,4 +1,4 @@
-使用champ开源算法,实现智元机器狗d1的ign-gazebo仿真
+使用champ开源算法,实现智元机器狗d1的ign-gazebo仿真和导航
 ===
 ## 使用方式
 - 配置环境变量
@@ -22,15 +22,15 @@ sudo apt install ros-humble-velodyne
 sudo apt install ros-humble-velodyne-gazebo-plugins
 sudo apt-get install ros-humble-velodyne-description
 ```
-- ign_gazebo节点
+- ign_gazebo节点 + 导航(包含cartographer)
 ```
 ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py 
 ```
-- 控制节点
+- 控制节点(没必要)
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
-![](.docs/example.png)
+![](.docs/image.png)
 ## 参考仓库
 - [anujjain-dev/unitree-go2-ros2](https://github.com/anujjain-dev/unitree-go2-ros2.git)
 
