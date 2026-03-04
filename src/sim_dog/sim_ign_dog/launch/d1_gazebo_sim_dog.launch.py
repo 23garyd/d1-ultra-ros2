@@ -37,6 +37,7 @@ from launch.actions import ExecuteProcess
 """
     在gazebo中加载自定义的仿真环境和d1_dog模型，并启动ros2与gazebo的桥接，
     同时启动rviz2进行可视化，以及启动champ控制器进行机器狗的运动控制。
+    启动导航功能(包含cartographer)
 """
 def generate_launch_description():
     ld = LaunchDescription()
@@ -142,7 +143,7 @@ def generate_launch_description():
     )
     ld.add_action(rviz2_node)
 
-    #因为 depth_camera/points 坐标系没发生改变 d1_dog/base_footprint/depth_camera 发布static 坐标系变换与 camera
+    #因为 depth_camera/points 坐标系没发生改变 d1_dog/base_link/depth_camera 发布static 坐标系变换与 camera
     static_laser_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
