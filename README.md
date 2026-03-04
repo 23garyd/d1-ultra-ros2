@@ -36,4 +36,6 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 - [chvmp/champ](https://github.com/chvmp/champ.git)
 
-
+## 开发参考
+- 基坐标系 base_link
+- 雷达坐标系 laser_up

@@ -970,17 +970,6 @@
       xyz="0 0 0" />
   </joint>
 
-  <link name="laser_up">
-  </link>
-
-  <joint name="laser_up_joint" type="fixed">
-    <origin xyz="0.0 0.0 0.1" rpy="0.0 0.0 0.0"/>
-    <parent link="base_link"/>
-    <child link="laser_up"/>
-    <axis xyz="0.0 0.0 0.0"/>
-    <limit lower="0.0" upper="0.0" effort="0.0" velocity="0.0"/>
-  </joint>
-
   <!-- 控制机器人运动 -->
   <!-- 运动插件1 生成joint_state_publisher 的插件 关节状态发布节点 -->
    <gazebo>
@@ -1006,7 +995,7 @@
     </plugin>
   </gazebo>
   <!-- 雷达传感器 -->
-  <gazebo reference="laser_up"> <!-- 针对生效的link -->
+  <gazebo reference="laser"> <!-- 针对生效的link -->
     <sensor name='scan' type='gpu_lidar'>
       <topic>scan</topic> <!-- 单线 /scan 多线 /scan/points -->
       <update_rate>10</update_rate>
@@ -1016,7 +1005,7 @@
         <scan>
           <!-- 水平采样参数 -->
           <horizontal>
-            <samples>640</samples> <!-- 水平旋转一个周期采样点 默认640 -->
+            <samples>2048</samples> <!-- 水平旋转一个周期采样点 -->
             <resolution>1</resolution> <!-- 雷达分辨率,前后扫描的间隔  单位 度-->
             <!-- 扫描角度 单位 弧度 -->
             <min_angle>-3.1415926</min_angle> <!-- 最小角度 -->
@@ -1033,13 +1022,13 @@
         </scan>
         <range> <!-- 有效距离 -->
           <min>0.08</min>
-          <max>20.0</max>
+          <max>10.0</max>
           <resolution>0.01</resolution> <!-- 扫描精度 米 -->
         </range>
       </lidar>
       <alwaysOn>1</alwaysOn> <!-- 是否一直打开 -->
       <visualize>true</visualize> <!-- 是否可见 -->
-      <ignition_frame_id>laser_up</ignition_frame_id> <!-- 指定雷达消息使用的frame-id -->
+      <ignition_frame_id>laser</ignition_frame_id> <!-- 指定雷达消息使用的frame-id -->
     </sensor>
   </gazebo>
 
