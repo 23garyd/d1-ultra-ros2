@@ -34,6 +34,7 @@ from ament_index_python.packages import get_package_share_directory
 # from launch.substitutions import Command
 from launch.actions import TimerAction
 from launch.actions import ExecuteProcess
+from launch.actions import SetEnvironmentVariable
 """
     在gazebo中加载自定义的仿真环境和d1_dog模型，并启动ros2与gazebo的桥接，
     同时启动rviz2进行可视化，以及启动champ控制器进行机器狗的运动控制。
@@ -56,6 +57,9 @@ def generate_launch_description():
     ros_gz_sim_path = get_package_share_directory('ros_gz_sim')
     #获取当前功能包路径 
     this_package_path = get_package_share_directory('sim_ign_dog')
+
+    ign_models_path = 'ign_models'
+    ld.add_action(SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', ign_models_path))
 
     """
     编辑.bashrc文件,添加环境变量
@@ -138,7 +142,7 @@ def generate_launch_description():
     rviz2_node = Node(
         package='rviz2',
         executable='rviz2',
-        arguments=['-d', os.path.join(this_package_path,'rviz','d1_ign_dog.rviz')],
+        arguments=['-d', os.path.join(this_package_path,'rviz','d1_nav2.rviz')],
         output='screen'
     )
     ld.add_action(rviz2_node)
