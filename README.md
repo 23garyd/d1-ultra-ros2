@@ -1,15 +1,9 @@
 使用champ开源算法,实现智元机器狗d1的ign-gazebo仿真和导航
 ===
 ## 使用方式
-- 配置环境变量（该环境变量已填入launch文件，可以跳过）
-```
-sudo nano ~/.bashrc
-```
-粘贴下列内容到文件末尾，保存并退出，然后执行`source ~/.bashrc`使配置生效
-```
-#ign模型路径
-export IGN_GAZEBO_RESOURCE_PATH=ign_models  #相对路径
-#export IGN_GAZEBO_RESOURCE_PATH=~/ign_models #绝对路径
+- 克隆本仓库
+```bash
+git clone https://github.com/chiway-luo/ign_robot_dog.git -b ign_robot_dog_Agibot
 ```
 - 安装依赖
 ```
@@ -26,7 +20,11 @@ sudo apt-get install ros-humble-velodyne-description
 ```
 ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py 
 ```
-- 控制节点(没必要)
+> 考虑到稳定性启动的问题,按依赖启动耗时较长(预计10s),请耐心等待;如启动失败请调节urdf中的激光雷达线束数量
+- [urdf 第1019行](src/sim_dog/edu_description/urdf/edu.urdf)
+
+
+- 控制节点(没必要,除非需要手动控制机器狗)
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
@@ -39,3 +37,10 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ## 开发参考
 - 基坐标系 base_link
 - 雷达坐标系 laser_up
+
+## 问题描述
+
+> 当前在部分环境下,由于显卡与ign_gazebo的兼容性问题,会导致仿真环境无法正常启动,导致虚拟机崩溃
+
+### 解决方案
+参考 [ssh端口转发](https://github.com/chiway-luo/ssh-x11-forwarding-guide.git) , 将仿真环境部署在远程服务器上,通过ssh连接进行仿真环境的使用

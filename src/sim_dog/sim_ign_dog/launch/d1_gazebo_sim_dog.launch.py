@@ -62,7 +62,7 @@ def generate_launch_description():
     ld.add_action(SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', ign_models_path))
 
     """
-    编辑.bashrc文件,添加环境变量
+    编辑.bashrc文件,添加环境变量 (在当前launch文件中已经设置了环境变量,无需当前操作)
         #ign模型路径
         export IGN_GAZEBO_RESOURCE_PATH=ign_models  #相对路径
         #export IGN_GAZEBO_RESOURCE_PATH=~/ign_models #绝对路径
