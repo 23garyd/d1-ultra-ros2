@@ -263,13 +263,13 @@ def generate_launch_description():
         )
     )
 
-    #发布base 到base_footprint的静态变换
+    #发布base_link 到d1_dog/base_footprint的静态变换
     static_base_footprint_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='static_base_footprint_tf',
         arguments=[
-            '--frame-id', 'base_footprint',
+            '--frame-id', 'd1_dog/base_footprint',
             '--child-frame-id', 'base_link',
             '--x', '0.0',
             '--y', '0.0',
@@ -315,7 +315,7 @@ def generate_launch_description():
             '--yaw', '0.0'
         ]
     )
-    ld.add_action(d1_base_footprint_to_base_link_tf)
+    # ld.add_action(d1_base_footprint_to_base_link_tf)
 
     #################
 
