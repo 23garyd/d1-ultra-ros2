@@ -1,0 +1,85 @@
+{
+  "aggregate_sha256": "c63bfe692bf529edcdb49419d7b1aea58c0d652dc7a94c74bf2337b5d9f9625a",
+  "interfaces": [
+    {
+      "logical_name": "msg/Localization",
+      "relative_path": "msg/Localization.msg",
+      "sha256": "61235ed7b44a73c5fd029bb13cf788592072ec2154cb1ca1ffe1cccb23836a7f",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/LocalizationState",
+      "relative_path": "msg/LocalizationState.msg",
+      "sha256": "3d7283e93955d320d9e8c6f0bd4c717a5e39844a1a8ae97918bd357f89cc275f",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/NavigationError",
+      "relative_path": "msg/NavigationError.msg",
+      "sha256": "0b793587f0764a35c7be79f5d7a25f89361984985cf1f3cc4d8db0dc17e31cae",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/NavigationErrorReport",
+      "relative_path": "msg/NavigationErrorReport.msg",
+      "sha256": "66be496885a36c4abe879187baa5f4ec3bdcca6cbc7f07ce3756809bea00a8d3",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/NavigationState",
+      "relative_path": "msg/NavigationState.msg",
+      "sha256": "38fc57c7f9790dad5cc6df05e3168d4ff544d9342c1b3d9044f5cd317fec184f",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/SlamState",
+      "relative_path": "msg/SlamState.msg",
+      "sha256": "e26359da1da31edef28f9232737439a8293adb7f8780a5c0547c38d0dc632ec2",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "msg/StartNavigation",
+      "relative_path": "msg/StartNavigation.msg",
+      "sha256": "5565f41a1ba69b9531290f5947537bb534ebbce54731f0275d5f132552830926",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/GetMapState",
+      "relative_path": "srv/GetMapState.srv",
+      "sha256": "7335946b20ae1040e24f6fd7913009845caa470bfcb0d1b533a3923190c30d26",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/IsExplorationGoalValid",
+      "relative_path": "srv/IsExplorationGoalValid.srv",
+      "sha256": "d1215c06018167b5b21312efcb640549371b1cec5d198c3062ea903c030aca3e",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/IsExplorationGoalsValid",
+      "relative_path": "srv/IsExplorationGoalsValid.srv",
+      "sha256": "c6cfc48d57f2358fec34b9a7d4904425f62fecdd382b79317c4bc530a03cb23d",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/LoadMap",
+      "relative_path": "srv/LoadMap.srv",
+      "sha256": "46a2b6760e616d9259afa1b4310e95dba314c347f48d637c4993a7f328e1ec69",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/MapState",
+      "relative_path": "srv/MapState.srv",
+      "sha256": "f413d526f6204cd82aec7975d27308c4850b96fca5319d918cecb85b223f91d2",
+      "source": "captured D1 interface introspection"
+    },
+    {
+      "logical_name": "srv/SetLocalizationType",
+      "relative_path": "srv/SetLocalizationType.srv",
+      "sha256": "e7aca5469d4c141afc211ab0963456c7bd718a5e22aa8580a3c92df63cc934fa",
+      "source": "captured D1 interface introspection"
+    }
+  ],
+  "package": "robots_dog_msgs",
+  "schema_version": 1
+}

@@ -46,6 +46,29 @@ ros2 launch sim_ign_dog d1_gazebo_sim_dog.launch.py
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 ![](.docs/image.png)
+
+## D1-Max 云端接口仿真 (vendor interface wrapper)
+
+`d1_sim_wrapper` 在本仿真之上暴露与真实 Agibot D1-Max 机器狗一致的 `robots_dog_msgs` 接口
+(建图/存图/加载地图/定位状态/占用地图/单点导航/导航状态, 共8个接口, 详见
+`~/Public/d1-max-minimal-wrapper-interface-contract.md`), 云端任务执行器可以像驱动真狗一样驱动本仿真。
+
+- 启动 (真实 D1-Max 使用 ROS_DOMAIN_ID=24):
+```bash
+source env.bash            # export ROS_DOMAIN_ID=24 + source install/setup.bash
+ros2 launch d1_sim_wrapper d1_vendor_sim.launch.py   # 仿真 + Nav2 + cartographer + wrapper
+# 或仿真已在运行时仅启动 wrapper:
+ros2 launch d1_sim_wrapper wrapper_only.launch.py
+```
+- 典型流程: `/slam_state_service`(start) → 建图 → `/slam_state_service`(stop, 自动存图到
+  `~/ign_dog_maps/history_map/<map_id>/`) → `/load_map_service` → 等待 `/localization_state.status==3`
+  → 发布 `/start_navigation` (cmd=1, function_id=4, 单个goal) → 监控 `/navigation_state` (5=成功)。
+- `MapState.data` 命令枚举在真机上尚未确认, wrapper 通过参数 `cmd_start/cmd_stop_save/cmd_cancel`
+  (默认 0/1/2) 配置, 真机枚举确认后修改 `config/wrapper_params.yaml` 即可。
+- 端到端验收: 先启动上面的仿真, 再执行
+  `bash src/vendor/d1_sim_wrapper/scripts/contract_smoke.sh`。
+- 注意: 切换 domain 后执行一次 `ros2 daemon stop`; 每个终端都要 `source env.bash`。
+
 ## 参考仓库
 - [anujjain-dev/unitree-go2-ros2](https://github.com/anujjain-dev/unitree-go2-ros2.git)
 

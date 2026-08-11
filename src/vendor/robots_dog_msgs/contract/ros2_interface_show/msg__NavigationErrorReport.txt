@@ -1,0 +1,23 @@
+string correlation_id
+NavigationError primary
+	uint32 code
+	diagnostic_msgs/KeyValue[] details
+		string key
+		string value
+	string message
+	builtin_interfaces/Time stamp
+		int32 sec
+		uint32 nanosec
+NavigationError[] related
+	uint32 code
+	diagnostic_msgs/KeyValue[] details
+		string key
+		string value
+	string message
+	builtin_interfaces/Time stamp
+		int32 sec
+		uint32 nanosec
+string scope
+builtin_interfaces/Time stamp
+	int32 sec
+	uint32 nanosec

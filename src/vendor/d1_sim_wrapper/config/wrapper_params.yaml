@@ -1,0 +1,24 @@
+d1_sim_wrapper:
+  ros__parameters:
+    # /slam_state_service MapState.data command values. The real D1-Max enum is
+    # unconfirmed (contract "Important unresolved item") — adjust these to match
+    # once the ROS team confirms the vendor values.
+    cmd_start: 0
+    cmd_stop_save: 1
+    cmd_cancel: 2
+
+    # Saved-map root, vendor layout <map_root>/<map_id>/{map.yaml,map.pgm,map.pcd}.
+    # Set to /ota/alg_data/map/history_map for path-identical testing (needs perms).
+    map_root: "~/ign_dog_maps/history_map"
+
+    # Localization gating: TF map->base_link older than tf_stale_sec -> LOST(6),
+    # older than loc_error_sec -> ERROR(4).
+    tf_stale_sec: 2.0
+    loc_error_sec: 10.0
+
+    # How long a terminal navigation state (4/5/6) stays observable on
+    # /navigation_state before returning to Standby(0).
+    terminal_hold_sec: 5.0
+
+    map_frame: "map"
+    base_frame: "base_link"
