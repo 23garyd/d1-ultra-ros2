@@ -47,11 +47,10 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 ![](.docs/image.png)
 
-## D1-Max 云端接口仿真 (vendor interface wrapper)
+## D1-Max 接口仿真 
 
 `d1_sim_wrapper` 在本仿真之上暴露与真实 Agibot D1-Max 机器狗一致的 `robots_dog_msgs` 接口
-(建图/存图/加载地图/定位状态/占用地图/单点导航/导航状态, 共8个接口, 详见
-`~/Public/d1-max-minimal-wrapper-interface-contract.md`), 云端任务执行器可以像驱动真狗一样驱动本仿真。
+(建图/存图/加载地图/定位状态/占用地图/单点导航/导航状态, 共8个接口,  云端任务执行器可以像驱动真狗一样驱动本仿真。
 
 - 启动 (真实 D1-Max 使用 ROS_DOMAIN_ID=24):
 ```bash
