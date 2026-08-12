@@ -5,6 +5,7 @@ pause/continue/stop intent tracking, the goal generation-id guard, and terminal
 state retention. All rclpy/action wiring lives in wrapper_node; this module is
 pure Python with injectable time so it is unit-testable.
 """
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Optional, Tuple
 
@@ -27,6 +28,22 @@ GOAL_STATUS_ABORTED = 6
 TERMINAL_STATES = (NavState.CANCELLED, NavState.SUCCEEDED, NavState.FAILED)
 
 
+@dataclass(frozen=True)
+class NavError:
+    code: int
+    message: str
+    scope: str
+
+
+# Distinct codes per cause, so NavigationErrorReport.primary.code carries
+# information rather than a constant. state==6 with no reason is exactly the
+# opacity interface 9 exists to remove.
+ERROR_NAV2_ABORTED = 2001
+ERROR_PRECONDITION = 2002
+ERROR_LOCALIZATION_LOST = 2003
+ERROR_GOAL_REJECTED = 2004
+
+
 class Feedback:
     __slots__ = ('distance_remaining', 'eta_sec', 'nav_time_sec')
 
@@ -45,6 +62,7 @@ class NavExecutor:
         self.generation = 0                   # increments per send; guards stale callbacks
         self.feedback = Feedback()
         self.last_terminal: Optional[NavState] = None
+        self.last_error: Optional[NavError] = None
         self._terminal_at: Optional[float] = None
         self._cancel_intent: Optional[NavState] = None  # PAUSE or CANCELLED
 
@@ -104,7 +122,10 @@ class NavExecutor:
         """Contract §7 precondition violation: observable FAILED, no motion."""
         self.function_id = function_id
         self.goal_pose = goal_pose
-        self._enter_terminal(NavState.FAILED, now)
+        self._enter_terminal(
+            NavState.FAILED, now,
+            NavError(ERROR_PRECONDITION,
+                     "start rejected: precondition violation", "precondition"))
 
     # -------- events from the Nav2 action client --------
 
@@ -114,7 +135,10 @@ class NavExecutor:
 
     def on_goal_rejected(self, generation: int, now: float) -> None:
         if self.is_current(generation):
-            self._enter_terminal(NavState.FAILED, now)
+            self._enter_terminal(
+                NavState.FAILED, now,
+                NavError(ERROR_GOAL_REJECTED,
+                         "navigation goal rejected by planner", "goal_rejected"))
 
     def on_feedback(self, generation: int, distance_remaining: float,
                     eta_sec: float, nav_time_sec: float) -> None:
@@ -140,14 +164,20 @@ class NavExecutor:
             else:
                 self._enter_terminal(NavState.CANCELLED, now)
         else:  # ABORTED or anything unexpected
-            self._enter_terminal(NavState.FAILED, now)
+            self._enter_terminal(
+                NavState.FAILED, now,
+                NavError(ERROR_NAV2_ABORTED,
+                         "navigation aborted by planner", "nav2_result"))
 
     def on_localization_lost(self, now: float) -> bool:
         """Contract §4/§8: localization 4/6 while navigating fails the goal.
         Returns True if the caller must cancel the in-flight Nav2 goal."""
         if not self.goal_active:
             return False
-        self._enter_terminal(NavState.FAILED, now)
+        self._enter_terminal(
+            NavState.FAILED, now,
+            NavError(ERROR_LOCALIZATION_LOST,
+                     "localization lost during active goal", "localization"))
         return True
 
     # -------- periodic --------
@@ -160,8 +190,12 @@ class NavExecutor:
             self._terminal_at = None
         return self.state
 
-    def _enter_terminal(self, state: NavState, now: Optional[float]) -> None:
+    def _enter_terminal(self, state: NavState, now: Optional[float],
+                        reason: Optional[NavError] = None) -> None:
         self.state = state
         self.last_terminal = state
         self._terminal_at = now
         self._cancel_intent = None
+        # Only FAILED carries a reason, and a non-FAILED terminal must clear a
+        # stale one so it never attaches to a later success.
+        self.last_error = reason if state == NavState.FAILED else None

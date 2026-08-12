@@ -111,3 +111,61 @@ def test_busy_prevents_double_start_by_caller_contract():
     e.request_pause()
     e.on_result(e.generation, GOAL_STATUS_CANCELED, now=1.0)
     assert e.busy and not e.goal_active  # paused still occupies the slot
+
+
+def test_nav2_abort_records_error_reason():
+    e = make_executor()
+    gen = run_to_active(e)
+    e.on_result(gen, GOAL_STATUS_ABORTED, now=10.0)
+    assert e.state == NavState.FAILED
+    assert e.last_error is not None
+    assert e.last_error.code != 0
+    assert e.last_error.message
+    assert e.last_error.scope == "nav2_result"
+
+
+def test_rejected_start_records_distinct_reason():
+    e = make_executor()
+    e.fail_rejected_start(now=1.0, function_id=4, goal_pose=GOAL)
+    assert e.state == NavState.FAILED
+    assert e.last_error.scope == "precondition"
+
+
+def test_localization_loss_records_distinct_reason():
+    e = make_executor()
+    run_to_active(e)
+    assert e.on_localization_lost(now=5.0) is True
+    assert e.state == NavState.FAILED
+    assert e.last_error.scope == "localization"
+
+
+def test_distinct_causes_get_distinct_codes():
+    """primary.code must carry information, not be a constant."""
+    a = make_executor()
+    gen = run_to_active(a)
+    a.on_result(gen, GOAL_STATUS_ABORTED, now=10.0)
+
+    b = make_executor()
+    b.fail_rejected_start(now=1.0, function_id=4, goal_pose=GOAL)
+
+    assert a.last_error.code != b.last_error.code
+
+
+def test_success_carries_no_error():
+    e = make_executor()
+    gen = run_to_active(e)
+    e.on_result(gen, GOAL_STATUS_SUCCEEDED, now=10.0)
+    assert e.state == NavState.SUCCEEDED
+    assert e.last_error is None
+
+
+def test_later_success_clears_a_stale_error():
+    """A FAILED goal must not leave a reason attached to the next success."""
+    e = make_executor()
+    gen = run_to_active(e)
+    e.on_result(gen, GOAL_STATUS_ABORTED, now=10.0)
+    assert e.last_error is not None
+    e.tick(20.0)  # release the terminal hold
+    gen2 = run_to_active(e, t=21.0)
+    e.on_result(gen2, GOAL_STATUS_SUCCEEDED, now=25.0)
+    assert e.last_error is None
