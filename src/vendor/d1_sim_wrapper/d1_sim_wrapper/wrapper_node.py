@@ -1,6 +1,6 @@
 """D1-Max vendor-interface wrapper node.
 
-Exposes the 8-interface robots_dog_msgs contract on top of the sim's
+Exposes the 9-interface robots_dog_msgs contract on top of the sim's
 cartographer (/map, map->odom TF) and Nav2 (/navigate_to_pose):
 
   server  /slam_state_service   robots_dog_msgs/srv/MapState
@@ -11,6 +11,8 @@ cartographer (/map, map->odom TF) and Nav2 (/navigate_to_pose):
   pub     /navigo/ms/cmn/intf/map  nav_msgs/msg/OccupancyGrid        on load/save
   sub     /start_navigation     robots_dog_msgs/msg/StartNavigation
   pub     /navigation_state     robots_dog_msgs/msg/NavigationState  20 Hz (BEST_EFFORT)
+  pub     /diagnostics/nav_error_report robots_dog_msgs/msg/NavigationErrorReport
+                                 on new NavExecutor.last_error (RELIABLE)
 
 QoS profiles replicate the vendor capture (see plan / bag metadata).
 """
@@ -35,7 +37,8 @@ from tf2_ros import (Buffer, ConnectivityException, ExtrapolationException,
                      LookupException, TransformListener)
 
 from robots_dog_msgs.msg import (Localization, LocalizationState,
-                                 NavigationState, SlamState, StartNavigation)
+                                 NavigationErrorReport, NavigationState,
+                                 SlamState, StartNavigation)
 from robots_dog_msgs.srv import LoadMap, MapState
 
 from . import map_store
@@ -127,6 +130,10 @@ class D1SimWrapper(Node):
             NavigationState, '/navigation_state', best_effort10)
         self._pub_map = self.create_publisher(
             OccupancyGrid, '/navigo/ms/cmn/intf/map', map_qos)
+        self._error_report = self.create_publisher(
+            NavigationErrorReport, "/diagnostics/nav_error_report",
+            reliable10, callback_group=self._grp_read)
+        self._reported_error = None
 
         self.create_subscription(OccupancyGrid, '/map', self._on_map,
                                  carto_map_qos, callback_group=self._grp_read)
@@ -498,6 +505,21 @@ class D1SimWrapper(Node):
         msg.remaining_distance_to_current = fb.distance_remaining
         msg.remaining_distance_to_final = fb.distance_remaining
         self._pub_nav_state.publish(msg)
+        self._maybe_publish_error()
+
+    def _maybe_publish_error(self) -> None:
+        error = self._nav.last_error
+        if error is None or error is self._reported_error:
+            return
+        report = NavigationErrorReport()
+        report.correlation_id = str(self._nav.last_terminal or 0)
+        report.scope = error.scope
+        report.stamp = self.get_clock().now().to_msg()
+        report.primary.code = error.code
+        report.primary.message = error.message
+        report.primary.stamp = report.stamp
+        self._error_report.publish(report)
+        self._reported_error = error
 
 
 def main(args=None):
