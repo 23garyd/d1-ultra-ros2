@@ -17,7 +17,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 # from launch.conditions import IfCondition #判断是否执行
 # from launch.conditions import UnlessCondition #取反
-# from launch.substitutions import PythonExpression #运行时计算表达式
+from launch.substitutions import PythonExpression #运行时计算表达式
 # 文件包含相关-------------------
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -67,6 +67,12 @@ def generate_launch_description():
         export IGN_GAZEBO_RESOURCE_PATH=ign_models  #相对路径
         #export IGN_GAZEBO_RESOURCE_PATH=~/ign_models #绝对路径
     """
+    # headless:=true 时仅运行服务端(-s), 不再启动 GUI 进程。传感器渲染仍走
+    # 服务端自己的 GLX 路径(需要可用的 DISPLAY)——实测 --headless-rendering
+    # (EGL 离屏) 在本机使激光雷达无输出, cartographer 失去输入, 定位停在 2。
+    # GUI 在高负载/远程桌面下会崩溃并连带关闭服务端(实测两次: 干净退出 +
+    # 535% CPU 自旋), 无人值守运行必须 headless。默认 false 保持原行为。
+    ld.add_action(DeclareLaunchArgument('headless', default_value='false'))
     gazebo_visualize_node = IncludeLaunchDescription(
         launch_description_source=PythonLaunchDescriptionSource(
             os.path.join(
@@ -77,7 +83,11 @@ def generate_launch_description():
         ),
         launch_arguments={# -v 是指日志等级 4 是最高等级的日志 -r 是指自动运行仿真
             # 'gz_args': f"-v 4 -r {os.path.join(demo_gazebo_sim_path,'world','house.sdf')}" #原始墙壁模型
-            'gz_args': f"-r {os.path.join(this_package_path,'world','house_add.sdf')}" #添加家具的房子模型, -r 表示自动运行
+            'gz_args': [PythonExpression([
+                "'-s ' if '",
+                LaunchConfiguration('headless'),
+                "' == 'true' else ''"]),
+                f"-r {os.path.join(this_package_path,'world','house_add.sdf')}"] #添加家具的房子模型, -r 表示自动运行
             # 'gz_args': f"-v 4 -r {os.path.join(get_package_share_directory('demo_gazebo_sim'),'world','visualize_lidar.sdf')}"
         }.items()
     )
@@ -138,12 +148,15 @@ def generate_launch_description():
     )
     ld.add_action(ros_bridge_node)
 
-    #启动rviz2
+    #启动rviz2 (rviz:=false 可关闭 — 无人值守/远程桌面场景下 GUI 进程既耗核又易崩)
+    from launch.conditions import IfCondition
+    ld.add_action(DeclareLaunchArgument('rviz', default_value='true'))
     rviz2_node = Node(
         package='rviz2',
         executable='rviz2',
         arguments=['-d', os.path.join(this_package_path,'rviz','d1_nav2.rviz')],
-        output='screen'
+        output='screen',
+        condition=IfCondition(LaunchConfiguration('rviz'))
     )
     ld.add_action(rviz2_node)
 
